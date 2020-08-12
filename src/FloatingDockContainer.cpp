@@ -546,7 +546,15 @@ void FloatingDockContainerPrivate::updateDropOverlays(const QPoint &GlobalPos)
 		return;
 	}
 
-	int VisibleDockAreas = TopContainer->visibleDockAreaCount();
+#ifdef ADS_USE_CHILD_WIDGET_OVERLAY
+    // Reparent overlay widgets. Because the overlay widget's parent is
+    // the corresponding top level window (indirectly) then it should
+    // be reparented when we try to dock into another top level window.
+    ContainerOverlay->setParent(TopContainer);
+    DockAreaOverlay->setParent(TopContainer);
+#endif
+
+    int VisibleDockAreas = TopContainer->visibleDockAreaCount();
 	ContainerOverlay->setAllowedAreas(
 	    VisibleDockAreas > 1 ? OuterDockAreas : AllDockAreas);
 	DockWidgetArea ContainerArea = ContainerOverlay->showOverlay(TopContainer);
@@ -782,10 +790,10 @@ void CFloatingDockContainer::closeEvent(QCloseEvent *event)
 void CFloatingDockContainer::hideEvent(QHideEvent *event)
 {
 	Super::hideEvent(event);
-    if (event->spontaneous())
-    {
-        return;
-    }
+	if (event->spontaneous())
+	{
+		return;
+	}
 
     // Prevent toogleView() events during restore state
     if (d->DockManager->isRestoringState())
@@ -810,10 +818,10 @@ void CFloatingDockContainer::showEvent(QShowEvent *event)
 {
 	Super::showEvent(event);
 #ifdef Q_OS_LINUX
-    if (CDockManager::testConfigFlag(CDockManager::FocusHighlighting))
-    {
-        this->window()->activateWindow();
-    }
+	if (CDockManager::testConfigFlag(CDockManager::FocusHighlighting))
+	{
+		this->window()->activateWindow();
+	}
 #endif
 }
 

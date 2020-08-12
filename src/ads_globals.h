@@ -262,5 +262,11 @@ void repolishStyle(QWidget* w, eRepolishChildOptions Options = RepolishIgnoreChi
 } // namespace internal
 } // namespace ads
 
+// Bu default, the docking functionality requires Composite extension
+// to be available on a Linux system to properly draw semi-transparent
+// overlay. But, if the Composite extension is not available the generic
+// Qt widget functionality can be used. Uncomment it to enable it.
+#define ADS_USE_CHILD_WIDGET_OVERLAY
+
 //---------------------------------------------------------------------------
 #endif // ads_globalsH
