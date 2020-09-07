@@ -1726,7 +1726,11 @@ void CDockContainerWidget::createRootSplitter()
 		return;
 	}
 	d->RootSplitter = d->newSplitter(Qt::Horizontal);
-	d->Layout->addWidget(d->RootSplitter);
+	QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	sizePolicy.setHorizontalStretch(1);
+	sizePolicy.setVerticalStretch(1);
+	d->RootSplitter->setSizePolicy(sizePolicy);
+	d->Layout->addWidget(d->RootSplitter, 1, 1, 1, 1);
 }
 
 

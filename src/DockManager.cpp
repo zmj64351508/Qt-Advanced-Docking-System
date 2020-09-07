@@ -45,6 +45,8 @@
 #include <QSettings>
 #include <QMenu>
 #include <QApplication>
+#include <QTabBar>
+#include <QGridLayout>
 
 #include "FloatingDockContainer.h"
 #include "DockOverlay.h"
@@ -478,6 +480,59 @@ CDockManager::CDockManager(QWidget *parent) :
 #ifdef Q_OS_LINUX
 	window()->installEventFilter(this);
 #endif
+
+	QGridLayout* Layout = qobject_cast<QGridLayout*>(layout());
+	QTabBar* TabBar = new QTabBar();
+	/*TabBar->addTab("Tab1");
+	TabBar->addTab("Tab2");
+	TabBar->addTab("Tab3");*/
+	TabBar->setMinimumWidth(6);
+	TabBar->setExpanding(false);
+	TabBar->setDrawBase(false);
+	TabBar->setAutoHide(false);
+	TabBar->setShape(QTabBar::RoundedEast);
+	TabBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+	Layout->addWidget(TabBar, 1, 0, 1, 1);
+	TabBar->setVisible(true);
+
+	TabBar = new QTabBar();
+	/*TabBar->addTab("Tab1");
+	TabBar->addTab("Tab2");
+	TabBar->addTab("Tab3");*/
+	TabBar->setMinimumWidth(6);
+	TabBar->setExpanding(false);
+	TabBar->setDrawBase(false);
+	TabBar->setAutoHide(false);
+	TabBar->setShape(QTabBar::RoundedEast);
+	TabBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+	Layout->addWidget(TabBar, 1, 2, 1, 1);
+	TabBar->setVisible(true);
+
+	TabBar = new QTabBar();
+	/*TabBar->addTab("Tab1");
+	TabBar->addTab("Tab2");
+	TabBar->addTab("Tab3");*/
+	TabBar->setMinimumHeight(6);
+	TabBar->setExpanding(false);
+	TabBar->setDrawBase(false);
+	TabBar->setAutoHide(false);
+	TabBar->setShape(QTabBar::RoundedNorth);
+	TabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	Layout->addWidget(TabBar, 0, 1, 1, 1);
+	TabBar->setVisible(true);
+
+	TabBar = new QTabBar();
+	/*TabBar->addTab("Tab1");
+	TabBar->addTab("Tab2");
+	TabBar->addTab("Tab3");*/
+	TabBar->setMinimumHeight(6);
+	TabBar->setExpanding(false);
+	TabBar->setDrawBase(false);
+	TabBar->setAutoHide(false);
+	TabBar->setShape(QTabBar::RoundedNorth);
+	TabBar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+	Layout->addWidget(TabBar, 2, 1, 1, 1);
+	TabBar->setVisible(true);
 }
 
 //============================================================================
