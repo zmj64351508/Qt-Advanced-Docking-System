@@ -64,6 +64,7 @@ struct DockAreaTitleBarPrivate
 {
 	CDockAreaTitleBar* _this;
 	QPointer<tTitleBarButton> TabsMenuButton;
+	QPointer<tTitleBarButton> AutoHideButton;
 	QPointer<tTitleBarButton> UndockButton;
 	QPointer<tTitleBarButton> CloseButton;
 	QBoxLayout* Layout;
@@ -160,6 +161,23 @@ void DockAreaTitleBarPrivate::createButtons()
 	Layout->addWidget(TabsMenuButton, 0);
 	_this->connect(TabsMenuButton->menu(), SIGNAL(triggered(QAction*)),
 		SLOT(onTabsMenuActionTriggered(QAction*)));
+
+	// AutoHide button
+	AutoHideButton = new CTitleBarButton(true);
+	AutoHideButton->setObjectName("autoHideButton");
+	AutoHideButton->setAutoRaise(true);
+	AutoHideButton->setCheckable(true);
+	AutoHideButton->setChecked(false);
+	internal::setToolTip(AutoHideButton, QObject::tr("Auto Hide"));
+	QIcon Icon = CDockManager::iconProvider().customIcon(ads::AutoHideIcon);
+	if (Icon.isNull())
+	{
+		Icon.addFile(":ads/images/autohide-button.svg", QSize());
+		Icon.addFile(":ads/images/autohide-button-active.svg", QSize(), QIcon::Normal, QIcon::On);
+	}
+	AutoHideButton->setIcon(Icon);
+	AutoHideButton->setSizePolicy(ButtonSizePolicy);
+	Layout->addWidget(AutoHideButton, 0);
 
 	// Undock button
 	UndockButton = new CTitleBarButton(testConfigFlag(CDockManager::DockAreaHasUndockButton));
