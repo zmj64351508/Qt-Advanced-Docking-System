@@ -313,15 +313,25 @@ struct DockAreaWidgetPrivate
 	/**
 	 * Scans all contained dock widgets for the max. minimum size hint
 	 */
-	void updateMinimumSizeHint()
+	void updateMinimumSizeHint(CDockWidget* DockWidget = nullptr)
 	{
 		MinSizeHint = QSize();
-		for (int i = 0; i < ContentsLayout->count(); ++i)
+		if (DockWidget)
 		{
-			auto Widget = ContentsLayout->widget(i);
-			MinSizeHint.setHeight(qMax(MinSizeHint.height(), Widget->minimumSizeHint().height()));
-			MinSizeHint.setWidth(qMax(MinSizeHint.width(), Widget->minimumSizeHint().width()));
+			MinSizeHint.setHeight(qMax(MinSizeHint.height(), DockWidget->minimumSizeHint().height()));
+			MinSizeHint.setWidth(qMax(MinSizeHint.width(), DockWidget->minimumSizeHint().width()));
 		}
+		else
+		{
+			for (int i = 0; i < ContentsLayout->count(); ++i)
+			{
+				auto Widget = ContentsLayout->widget(i);
+				MinSizeHint.setHeight(qMax(MinSizeHint.height(), Widget->minimumSizeHint().height()));
+				MinSizeHint.setWidth(qMax(MinSizeHint.width(), Widget->minimumSizeHint().width()));
+			}
+		}
+
+		MinSizeHint.rheight() += TitleBar->minimumSizeHint().height();
 	}
 };
 // struct DockAreaWidgetPrivate
@@ -428,8 +438,7 @@ void CDockAreaWidget::insertDockWidget(int index, CDockWidget* DockWidget,
 	d->tabBar()->blockSignals(false);
 	TabWidget->setVisible(!DockWidget->isClosed());
 	DockWidget->setProperty(INDEX_PROPERTY, index);
-	d->MinSizeHint.setHeight(qMax(d->MinSizeHint.height(), DockWidget->minimumSizeHint().height()));
-	d->MinSizeHint.setWidth(qMax(d->MinSizeHint.width(), DockWidget->minimumSizeHint().width()));
+	d->updateMinimumSizeHint(DockWidget);
 	if (Activate)
 	{
 		setCurrentIndex(index);
@@ -971,7 +980,16 @@ bool CDockAreaWidget::isCentralWidgetArea() const
 //============================================================================
 QSize CDockAreaWidget::minimumSizeHint() const
 {
-	return d->MinSizeHint.isValid() ? d->MinSizeHint : Super::minimumSizeHint();
+	if (d->MinSizeHint.isValid())
+	{
+		QSize Result = d->MinSizeHint;
+		Result.setWidth(qMax(d->MinSizeHint.width(), d->TitleBar->minimumSizeHint().width()));
+		return Result;
+	}
+	else
+	{
+		return Super::minimumSizeHint();
+	}
 }
 
 
